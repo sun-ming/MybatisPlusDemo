@@ -1,0 +1,66 @@
+MyBatis-Plus课程目录
+第1章：MyBatis-Plus简介及快速入门
+1、MyBatis vs JPA
+MyBatis优势
+(1)SQL语句可以自由控制，更灵活，性能较高
+(2)SQL与代码分离，易于阅读和维护
+(3)提供XML标签，支持编写动态SQL语句
+JPA优势
+(1)JPA移植性比较好(JPQL)
+(2)提供了很多CRUD方法、开发效率高
+(3)对象化程度更高
+MyBatis劣势
+(1)简单的CRUD操作还得写SQL语句
+(2)XML中有大量的SQL要维护
+(3)MyBatis自身功能很有限，但支持Plugin
+2、MP简介
+MP是一个MyBatis的增强工具，只做增强不做改变
+官方地址：https://mybatis.plus/,github，码云
+特性介绍：
+（1）无侵入、损耗小、强大的crud操作
+（2）支持Lambda形式调用、支持多种数据库
+（3）支持主键自动生成、支持ActiveRecord模式
+（4）支持自定义全局通用操作、支持关键字自动转义
+（5）内置代码生成器、内置分页插件、内置性能分析插件
+（6）内置全局拦截插件、内置sql注入剥离器
+3、lombok简介及安装
+4、快速入门小例子
+HikariCP
+
+第2章：MyBatis-Plus核心功能
+
+第6章：
+6.1、AR模式 直接通过实体类对象直接进行表的增删改查操作，方便开发人员的开发
+    实现AR模式：
+    1、实体类继承Model对象，@EqualsAndHashCode(callSuper = false)
+    2、必须存在对应的原始mapper接口，并继承BaseMapper
+6.2、主键策略
+    默认的全局策略是基于雪花算法的自增ID
+    局部主键策略实现：IdType
+        @TableId(type = IdType.AUTO)
+    全局主键策略实现
+    mybatis-plus:
+      global-config:
+        db-config:
+          id-type: auto
+    局部策略优于全局策略
+
+6.3、MP配置 https://mybatis.plus/config/
+    基本配置
+
+    进阶配置
+
+    DB策略配置
+
+第7章：通用service
+基本方法
+
+批量操作方法
+
+链式调用方法
+
+
+
+
+
+

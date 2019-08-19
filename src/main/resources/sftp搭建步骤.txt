@@ -1,0 +1,25 @@
+1、创建ftp主目录，根据磁盘情况而定
+mkdir /var/ftp/
+
+2、修改 vim /etc/ssh/sshd_config
+#Subsystem      sftp    /usr/libexec/openssh/sftp-server	注释这一行
+Subsystem      sftp    internal-sftp
+Match Group ftpuser
+ChrootDirectory /var/ftp/		#注意修改为第一步中的主目录
+ForceCommand internal-sftp
+AllowTcpForwarding no
+X11Forwarding no
+
+3、重启sshd服务
+service sshd restart
+service sshd status
+
+4、添加用户组（与第2步中的Match Group的用户组一致）
+groupadd ftpuser
+
+5、添加用户
+useradd -g ftpuser -s /sbin/nologin -d /var/ftp/dianxinjmr -m dianxinjmr
+useradd -g ftpuser -s /sbin/nologin -d /var/ftp/dianxinmalware -m dianxinmalware
+
+6、设置密码
+passwd dianxinjmr

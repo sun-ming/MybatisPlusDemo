@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+    <!--&lt;!&ndash; 查找数据库的连接配置 &ndash;&gt;
+    <properties resource="DB.properties">
+    </properties>
+
+    &lt;!&ndash;也可以指定一个实体bean包包名，mybatis会在包名下面搜索需要的java bean &ndash;&gt;
+    <typeAliases>
+        <package name="com.javaketang.Drom.Bean"/>
+    </typeAliases>
+
+    &lt;!&ndash; 环境配置 &ndash;&gt;
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="${driver}"/>
+                <property name="url" value="${url}"/>
+                <property name="username" value="${username}"/>
+                <property name="password" value="${password}"/>
+            </dataSource>
+        </environment>
+    </environments>
+
+    &lt;!&ndash; 引入映射 &ndash;&gt;
+    <mappers>
+        <mapper resource="com/javaketang/Dorm/Mapper/t_dormmanager_mapper.xml"/>
+        <mapper resource="com/javaketang/Dorm/Mapper/t_student_mapper.xml"/>
+    </mappers>-->
+
+</configuration>
