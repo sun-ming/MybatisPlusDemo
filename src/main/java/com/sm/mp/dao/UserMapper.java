@@ -1,5 +1,6 @@
 package com.sm.mp.dao;
 
+import com.baomidou.mybatisplus.annotation.SqlParser;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -18,5 +19,6 @@ public interface UserMapper extends BaseMapper<User> {
 
 
     //@Select("select * from user ${ew.customSqlSegment}")
+    //@SqlParser(filter = true)
     IPage<User> selectUserPageMy(Page<User> page, @Param(Constants.WRAPPER) Wrapper<User> wrapper);
 }

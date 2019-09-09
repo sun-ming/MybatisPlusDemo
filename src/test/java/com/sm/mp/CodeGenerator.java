@@ -1,6 +1,6 @@
 package com.sm.mp;
 
-import com.baomidou.mybatisplus.annotation.DbType;
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.baomidou.mybatisplus.generator.AutoGenerator;
 import com.baomidou.mybatisplus.generator.InjectionConfig;
@@ -15,79 +15,92 @@ import java.util.List;
 /**
  * @Auther: sunming
  * @Date: 2019-8-13 11:25
- * @Description:
- * 演示例子，执行 main 方法控制台输入模块表名回车自动生成对应项目目录中
+ * @Description: 演示例子，执行 main 方法控制台输入模块表名回车自动生成对应项目目录中
  */
 public class CodeGenerator {
 
     public static void main(String[] args) {
         // 代码生成器
-        AutoGenerator mpg = new AutoGenerator();
+        AutoGenerator autoGenerator = new AutoGenerator();
 
-        //外层包名
-        String packageName = "com";
+        //1、数据源 dataSourceConfig 配置
+        DataSourceConfig dataSourceConfig = new DataSourceConfig();
+        /*dataSourceConfig.setDbQuery(new MySqlQuery());
+        dataSourceConfig.setDbType(DbType.MYSQL);
+        dataSourceConfig.setSchemaName(null);
+        dataSourceConfig.setTypeConvert(new MySqlTypeConvert());*/
+        dataSourceConfig.setUrl("jdbc:mysql://172.30.154.61:3306/platform_gdgj?useSSL=false&serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf8&characterSetResults=utf8&allowMultiQueries=true");
+        dataSourceConfig.setDriverName("com.mysql.cj.jdbc.Driver"); //设置数据库驱动,因为我的数据库版本是mysql5.7,所以使用该驱动
+        //dsc.setDriverName("com.mysql.jdbc.Driver"); //mysql5.6以下的驱动
+        dataSourceConfig.setUsername("root"); //数据库名称
+        dataSourceConfig.setPassword("rzxNS_123"); //数据库密码
+        autoGenerator.setDataSource(dataSourceConfig);
 
-        // 全局配置
-        GlobalConfig gc = new GlobalConfig();
+        //2、数据库表配置；策略配置
+        StrategyConfig strategyConfig = new StrategyConfig();
+        strategyConfig.setSkipView(true);
+        strategyConfig.setNaming(NamingStrategy.underline_to_camel);
+        strategyConfig.setColumnNaming(NamingStrategy.underline_to_camel);
+        strategyConfig.setSuperMapperClass("com.baomidou.mybatisplus.core.mapper.BaseMapper");
+        strategyConfig.setSuperServiceClass("com.baomidou.mybatisplus.extension.service.IService");
+        strategyConfig.setSuperServiceImplClass("com.baomidou.mybatisplus.extension.service.impl.ServiceImpl");
+        strategyConfig.setInclude("rpt_url_abnormal_website");
+        strategyConfig.setEntityLombokModel(true);
+        strategyConfig.setRestControllerStyle(true);
+        strategyConfig.setEntityTableFieldAnnotationEnable(false);
+        autoGenerator.setStrategy(strategyConfig);
 
-        String projectPath = "E:/test/project/aaa"; //windows下生成文件的位置
-        //String projectPath = "/Users/lixinyu/myspace/project"; //mac下生成文件的位置
-        gc.setOutputDir(projectPath + "/src/main/java");
+        //3、包名配置
+        String packageName = "com.sm";
+        PackageConfig packageConfig = new PackageConfig();
+        packageConfig.setModuleName("mp");
+        packageConfig.setMapper("dao");
+        packageConfig.setParent(packageName);
+        autoGenerator.setPackageInfo(packageConfig);
 
-        gc.setFileOverride(true);
-        gc.setAuthor("sunming"); //生成文件的作者名称
-        gc.setOpen(false);
-        gc.setActiveRecord(true);
-        gc.setEnableCache(false);// XML 二级缓存
-        gc.setBaseResultMap(true);// XML ResultMap
-        gc.setBaseColumnList(false);// XML columList
-        gc.setSwagger2(true);
 
-        mpg.setGlobalConfig(gc);
+        //4、模板配置
+        TemplateConfig templateConfig = new TemplateConfig();
+        templateConfig.setXml(null);
+        autoGenerator.setTemplate(templateConfig);
 
-        // 数据源配置
-        DataSourceConfig dsc = new DataSourceConfig();
-        dsc.setUrl("jdbc:mysql://127.0.0.1:3306/myweb?characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8&rewriteBatchedStatements=true");//oa为我自己的数据库
-        dsc.setDriverName("com.mysql.cj.jdbc.Driver"); //设置数据库驱动,因为我的数据库版本是mysql5.7,所以使用该驱动
-        // dsc.setDriverName("com.mysql.jdbc.Driver"); //mysql5.6以下的驱动
-        dsc.setUsername("root"); //数据库名称
-        dsc.setPassword("root"); //数据库密码
-        dsc.setDbType(DbType.MYSQL);
-        mpg.setDataSource(dsc);
+        //5、全局策略 globalConfig 配置
+        GlobalConfig globalConfig = new GlobalConfig();
+        String projectPath = System.getProperty("user.dir");
+        //String projectPath = "E:/workCode/IdeaProjects/MybatisPlusDemo"; //windows下生成文件的位置
+        globalConfig.setOutputDir(projectPath + "/src/main/java");
+        globalConfig.setFileOverride(false);
+        globalConfig.setAuthor("sunming"); //生成文件的作者名称
+        globalConfig.setOpen(false);
+        globalConfig.setEnableCache(false);// XML 二级缓存
+        globalConfig.setSwagger2(true);
+        globalConfig.setActiveRecord(false);
+        globalConfig.setBaseResultMap(false);// XML ResultMap
+        globalConfig.setBaseColumnList(false);// XML columList
+        globalConfig.setIdType(IdType.AUTO);
+        autoGenerator.setGlobalConfig(globalConfig);
 
-        // 包配置
-        PackageConfig pc = new PackageConfig();
-        pc.setModuleName("sunming");
-        pc.setParent(packageName);
-        mpg.setPackageInfo(pc);
-
-        // 自定义配置
-        InjectionConfig cfg = new InjectionConfig() {
+        //6、注入 injectionConfig 配置
+        InjectionConfig injectionConfig = new InjectionConfig() {
             @Override
             public void initMap() {
                 // to do nothing
             }
         };
-        List<FileOutConfig> focList = new ArrayList<>();
-        focList.add(new FileOutConfig("/templates/mapper.xml.ftl") {
+        List<FileOutConfig> fileOutConfigList = new ArrayList<>();
+        fileOutConfigList.add(new FileOutConfig("/templates/mapper.xml.ftl") {
             @Override
             public String outputFile(TableInfo tableInfo) {
                 // 自定义输入文件名称
-                return projectPath + "/src/main/resources/mapper/" + pc.getModuleName()
+                return projectPath + "/src/main/resources/mapper/" + packageConfig.getModuleName()
                         + "/" + tableInfo.getEntityName() + "Mapper" + StringPool.DOT_XML;
             }
         });
-        cfg.setFileOutConfigList(focList);
-        mpg.setCfg(cfg);
-        mpg.setTemplate(new TemplateConfig().setXml(null));
+        injectionConfig.setFileOutConfigList(fileOutConfigList);
+        autoGenerator.setCfg(injectionConfig);
 
-        // 策略配置
-        StrategyConfig strategy = new StrategyConfig();
-        strategy.setNaming(NamingStrategy.underline_to_camel);
-        strategy.setColumnNaming(NamingStrategy.underline_to_camel);
-        strategy.setEntityTableFieldAnnotationEnable(true);
-        mpg.setStrategy(strategy);
-        mpg.setTemplateEngine(new FreemarkerTemplateEngine());
-        mpg.execute();
+
+        autoGenerator.setTemplateEngine(new FreemarkerTemplateEngine());
+        autoGenerator.execute();
     }
 }
